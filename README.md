@@ -19,6 +19,12 @@ This Django-based authentication bridge serves as a central gateway for all micr
 - Error handling and logging
 - Service health monitoring
 
+
+## Docker users, pull the image from my hub repository below 
+```bash
+docker pull theisaac/django_authentication_gateway:latest
+```
+
 ## Prerequisites
 
 - Python 3.8+
