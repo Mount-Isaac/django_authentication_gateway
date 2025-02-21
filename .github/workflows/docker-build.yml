@@ -36,14 +36,14 @@ jobs:
       # Build the Docker image
       - name: Build Docker image
         run: |
-          docker build -t your-docker-image-name:latest .
+          docker build -t django_authentication_gateway:latest .
 
       # Optional: Push the image to Docker Hub or other registries
       - name: Push Docker image to Docker Hub
         if: github.ref == 'refs/heads/main'
         run: |
           echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
-          docker push your-docker-image-name:latest
+          docker push django_authentication_gateway:latest
 
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
