@@ -29,7 +29,7 @@ This Django-based authentication bridge serves as a central gateway for all micr
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone git@github.com:Mount-Isaac/django_authentication_gateway.git
 cd django-authentication-gateway
 ```
 
@@ -48,7 +48,6 @@ pip install -r requirements.txt
 4. Configure environment variables:
 ```bash
 cp .env.example .env
-# Edit .env with your settings
 ```
 
 ## Configuration
