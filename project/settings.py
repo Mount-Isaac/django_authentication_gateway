@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+from django.core.exceptions import ValidationError
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p0e6)7cp_8euff#k*#3g5v0pk5_5=-&+sn_*v+2(=a^le(3+f7'
+if os.environ.get('SECRET_KEY'): 
+    SECRET_KEY = os.environ.get('SECRET_KEY') 
+else:
+     raise ValidationError("SECRET_KEY cannot be left blank")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,7 +38,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,6 +47,28 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+EXTERNAL_APPS = [
+    'rest_framework',
+    'corsheaders'
+]
+
+INTERNAL_APPS = [
+    'auth_service',
+    'proxy_service',
+    'monitoring',
+    'api_management',
+    'config_manager',
+    'cache',
+    'service',
+    'tests',
+    'docs',
+    'examples'
+]
+
+
+
+INSTALLED_APPS  = DJANGO_APPS + EXTERNAL_APPS +  INTERNAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,10 +104,21 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': os.getenv('DAG_DB_HOST'),
+        'NAME': os.getenv('DAG_DB_NAME'),
+        'USER': os.getenv('DAG_DB_USER'),
+        'PASSWORD': os.getenv('DAG_DB_PASSWORD'),
+        'PORT': os.getenv('DAG_DB_PORT'),
     }
 }
 
