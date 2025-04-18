@@ -26,5 +26,5 @@ jobs:
         with:
           context: .
           push: ${{ github.ref == 'refs/heads/main' }}  # Only push if on main branch
-          tags: ${{ secrets.DOCKER_REGISTRY }}/theisaac/django_authentication_gateway:latest
+          tags: ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
 
