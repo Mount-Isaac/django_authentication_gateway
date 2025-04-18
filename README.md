@@ -1,6 +1,7 @@
 # Django Authentication Gateway
 
-![Project Flow Chart](./images/project_flowchart.png)
+![Project Flow Chart](https://drive.google.com/uc?id=1YmFVmyvS7RhCDgUwbT3-GjJ61_LFAyZq)
+
 
 ## ✅ Features
 
