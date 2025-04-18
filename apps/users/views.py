@@ -19,4 +19,10 @@ class RegisterUserView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+
+class PasswordResetView(APIView):
+    pass
+
+
 register_user = RegisterUserView.as_view()
+reset_password = PasswordResetView.as_view()
