@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from django.core.exceptions import ValidationError
+from apps import INTERNAL_APPS
 
 load_dotenv()
 
@@ -52,20 +53,6 @@ EXTERNAL_APPS = [
     'rest_framework',
     'corsheaders'
 ]
-
-INTERNAL_APPS = [
-    'auth_service',
-    'proxy_service',
-    'monitoring',
-    'api_management',
-    'config_manager',
-    'cache',
-    'service',
-    'tests',
-    'docs',
-    'examples'
-]
-
 
 
 INSTALLED_APPS  = DJANGO_APPS + EXTERNAL_APPS +  INTERNAL_APPS
