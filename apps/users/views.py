@@ -17,3 +17,6 @@ class RegisterUserView(APIView):
         except Exception as e:
             # yet to log 
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+register_user = RegisterUserView.as_view()
