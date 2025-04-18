@@ -1,175 +1,153 @@
-# Django Authentication GATEWAY
+# Django Authentication Gateway
 
-A centralized authentication gateway for microservices architecture that handles authentication and request forwarding to multiple backend services.
+![Project Flow Chart](./images/project_flowchart.png)
 
-## Overview
+## ✅ Features
 
-This Django-based authentication bridge serves as a central gateway for all microservices in your architecture. It provides:
-- Single point of authentication
-- Request forwarding to microservices
-- Unified error handling
-- Centralized monitoring
-
-## Features
-
-- JWT-based authentication
-- Request proxying to multiple microservices
-- Automatic token validation
-- Request/Response transformation
-- Error handling and logging
-- Service health monitoring
+- JWT-based authentication (OAuth2 ready)
+- Token validation middleware
+- Proxying/forwarding to internal services
+- Request/response transformation
+- Role/permission middleware
+- Basic service health-check endpoints
 
 
-## Docker users, pull the image from my hub repository below 
+
+## 🐳 Docker
+
+Pull from Docker Hub:
+
 ```bash
 docker pull theisaac/django_authentication_gateway:latest
 ```
 
-## Prerequisites
+---
 
-- Python 3.8+
-- Django 4.0+
-- PostgreSQL/MySQL (for token storage)
+## ⚙️ Requirements
 
-## Installation
+- Python 3.9+
+- Django 4.2+
+- PostgreSQL / MySQL 
 
-1. Clone the repository:
+
+## 🛠️ Setup
+
 ```bash
-git clone git@github.com:Mount-Isaac/django_authentication_gateway.git
-cd django-authentication-gateway
-```
+# 1. Clone repo
+git clone https://github.com/Mount-Isaac/django_authentication_gateway.git
+cd django_authentication_gateway
 
-2. Create and activate virtual environment:
-```bash
+# 2. Virtual environment
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate  # Windows
-```
+source venv/bin/activate  # or venv\Scripts\activate for Windows
 
-3. Install dependencies:
-```bash
+# 3. Install deps
 pip install -r requirements.txt
-```
 
-4. Configure environment variables:
-```bash
+# 4. Configure env
 cp .env.example .env
 ```
 
-## Configuration
+---
 
-### 1. Environment Variables
+## 🔐 Environment Variables
 
 ```env
 DEBUG=False
-SECRET_KEY=your-secret-key
-DATABASE_URL=postgresql://user:pass@localhost/dbname
+SECRET_KEY=your-django-secret
+DATABASE_URL=postgres://user:password@localhost/db
 JWT_SECRET_KEY=your-jwt-secret
 ```
 
-### 2. Microservices Configuration
+---
 
-Add your microservices in `config.yaml`:
+## 🧭 Microservice Routing
+
+Define services in `config.yaml` or directly in `settings.py`:
 
 ```python
 MICROSERVICES = {
-    'service1': {
-        'url': 'http://service1:5000',
-        'timeout': 30,
+    'users': {
+        'url': 'http://users-service:5000',
+        'timeout': 15,
     },
-    'service2': {
-        'url': 'http://service2:5001',
-        'timeout': 30,
+    'orders': {
+        'url': 'http://orders-service:5001',
+        'timeout': 15,
     }
 }
 ```
 
-## Usage
+---
 
-### 1. Authentication Flow
+## 🔁 Authentication Flow
 
-1. Client requests authentication token:
-   - POST `/api/auth/token/`
-   - Receives JWT token
+1. `POST /api/auth/token/` — get a JWT token
+2. Add header: `Authorization: Bearer <token>`
+3. Gateway validates token
+4. Routes request to correct microservice
 
-2. Use token for subsequent requests:
-   - Add header: `Authorization: Bearer <token>`
-   - Gateway validates token
-   - Forwards request to appropriate service
+---
 
-### 2. Request Forwarding
+## 📦 Request Forwarding Example
 
-- Original request: `GET /service1/users/`
-- Gateway authenticates request
-- Forwards to: `http://service1:5000/users/`
-- Returns response to client
-
-## Security Considerations
-
-1. Always use HTTPS in production
-2. Configure appropriate token expiration times
-3. Implement rate limiting
-4. Sanitize headers and request data
-5. Monitor for suspicious activities
-
-## Monitoring
-
-The gateway provides monitoring endpoints:
-
-- `/health/` - System health status
-- `/metrics/` - Performance metrics
-- `/services/status/` - Microservices status
-
-## Development
-
-### Setting Up Development Environment
-
-1. Install development dependencies:
-```bash
-pip install -r requirements-dev.txt
+```http
+Client → GET /users/profile/
+Gateway → Auth → Proxy → http://users-service/profile/
 ```
 
-2. Run tests:
+---
+
+## 🛡️ Security
+
+- Use HTTPS in production
+- Short-lived access tokens
+- Rate limiting (via caching or middleware)
+- Header sanitization
+- IP + request logging
+
+
+## 📊 Monitoring Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `/health/` | Gateway health check |
+| `/metrics/` | Performance stats |
+| `/services/status/` | Microservice availability |
+
+---
+
+## 🧪 Dev & Testing
+
 ```bash
+# Install dev tools
+pip install -r requirements-dev.txt
+
+# Run tests
 python manage.py test
 ```
 
-### Adding New Services
+---
 
-1. Add service configuration to `MICROSERVICES` in settings
-2. Configure routing rules if needed
-3. Test connectivity and authentication
+## ➕ Add a New Microservice
 
-## Troubleshooting
-
-Common issues and solutions:
-
-1. Token validation failures:
-   - Check token expiration
-   - Verify JWT secret key
-   - Ensure correct token format
-
-2. Service connection issues:
-   - Verify service URLs
-   - Check network connectivity
-   - Confirm service health
-
-## Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Submit pull request
-4. Follow coding standards
-5. Include tests for new features
-
-## Contact
-
-For support or queries:
-- Email: isadechair019@gmail.com
-- ASAP response : [Whatsapp](https://api.whatsapp.com/send/?phone=254759856000&text&type=phone_number&app_absent=0)
+1. Register it in `MICROSERVICES` config.yaml
+2. Set up any auth or routing rules if needed
+3. Deploy and test
 
 
-### <i style="background-color: green">DJANGO UNIX HINT: start many apps at a go using this command: </i>
-```bash 
-for app in app_1 app_2 app_3; do python manage.py startapp $app; done
+
+## 🙋 Contact
+
+- Email: **isadechair019@gmail.com**
+- WhatsApp: [Chat Now](https://api.whatsapp.com/send/?phone=254759856000)
+
+---
+
+## 🧠 Pro Tip
+
+Start multiple Django apps at once:
+
+```bash
+for app in app1 app2 app3; do python manage.py startapp $app; done
 ```

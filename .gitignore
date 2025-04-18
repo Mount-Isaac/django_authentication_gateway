@@ -33,7 +33,6 @@ ENV/
 .DS_Store
 
 # Project-specific
-config.yaml
 config.json
 routes.yaml
 routes.json

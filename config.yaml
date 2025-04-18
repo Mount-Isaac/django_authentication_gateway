@@ -1,0 +1,10 @@
+ICROSERVICES = {
+    'users': {
+        'url': 'http://users-service:5000',
+        'timeout': 15,
+    },
+    'orders': {
+        'url': 'http://orders-service:5001',
+        'timeout': 15,
+    }
+}
