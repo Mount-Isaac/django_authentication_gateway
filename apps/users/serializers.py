@@ -1,10 +1,11 @@
 from .models import CustomUser
-from rest_framework.serializers import ModelSerializer
-from django.contrib.auth.models import User
+from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password
 from .models import CustomUser
+from types import NoneType
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'phone_number', 'is_active', 'password']
@@ -16,3 +17,29 @@ class UserSerializer(ModelSerializer):
     def create(self, validated_data):
         user = CustomUser.objects.create_user(**validated_data)
         return user
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        """
+        Validate password & confirm password match 
+        """
+
+        if data.get("new_password") != data.get("confirm_password"):
+            raise serializers.ValidationError({"confirm_password": "Passwords must match"})
+        
+        try:
+            validate_password(data.get("new_password"))
+        except Exception as e:
+            return serializers.ValidationError({"new_password": list(e)})
+
+        return data

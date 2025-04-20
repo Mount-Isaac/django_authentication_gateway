@@ -6,5 +6,6 @@ from .views import (
 
 urlpatterns = [
     path("register/", register_user, name='register-user'),
-    path("reset/password/", reset_password, name='reset-password')
+    path("password-reset/", reset_password, name='password-reset-request'),
+    path("password-reset/confirm/", reset_password, name='password-reset-confirm')
 ]
