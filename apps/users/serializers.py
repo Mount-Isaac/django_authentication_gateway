@@ -8,10 +8,11 @@ from types import NoneType
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'phone_number', 'is_active', 'password']
+        fields = ['id', 'email', 'first_name', 'last_name', 'phone_number', 'is_active', 'password']
 
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': { 'write_only': True },
+            'is_active': { 'read_only': True }
         }
     
     def create(self, validated_data):

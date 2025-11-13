@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import uuid
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -15,7 +16,9 @@ from .serializers import (
 from .models import (
     CustomUser
 )
+from apps.helpers import format_response
 
+request_id = str(uuid.uuid4())
 
 # Create your views here.
 class RegisterUserView(APIView):
@@ -25,10 +28,23 @@ class RegisterUserView(APIView):
             user_serializer = UserSerializer(data=data)
             if user_serializer.is_valid():
                 user_serializer.save()
-                return Response({"message": "user registered successfully", "user":user_serializer.data}, status=status.HTTP_201_CREATED)
-            return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    format_response(
+                        success=True,
+                        message="user registered successfully",
+                        data=user_serializer.data,
+                        request_id=request_id,
+                    ), status=status.HTTP_201_CREATED)
+            return Response(
+                format_response(
+                    success=False,
+                    message='Failed to create user.',
+                    request_id=request_id,
+                    error=user_serializer.errors.values()
+                ),status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             # yet to log 
+            print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
