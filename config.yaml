@@ -1,10 +1,27 @@
-ICROSERVICES = {
-    'users': {
-        'url': 'http://users-service:5000',
-        'timeout': 15,
-    },
-    'orders': {
-        'url': 'http://orders-service:5001',
-        'timeout': 15,
-    }
-}
+microservices:
+  orders:
+    url: http://localhost:5000
+    timeout: 30
+    authorization: true
+    forward:
+      headers: true
+      body: true
+      params: true
+
+  users:
+    url: http://localhost:5001
+    timeout: 30
+    authorization: false
+    forward:
+      headers: true
+      body: false
+      params: true
+
+  inventory:
+    url: http://localhost:5002
+    timeout: 45
+    authorization: true
+    forward:
+      headers: true
+      body: true
+      params: true

@@ -1,9 +1,9 @@
 # Django Authentication Gateway
 
-![Project Flow Chart](https://drive.google.com/uc?id=1YmFVmyvS7RhCDgUwbT3-GjJ61_LFAyZq)
+![Project Flow Chart](./images/project_design.png)
 
 
-## ✅ Features
+## Features
 
 - JWT-based authentication (OAuth2 ready)
 - Token validation middleware
@@ -12,9 +12,7 @@
 - Role/permission middleware
 - Basic service health-check endpoints
 
-
-
-## 🐳 Docker
+## Docker
 
 Pull from Docker Hub:
 
@@ -22,16 +20,14 @@ Pull from Docker Hub:
 docker pull theisaac/django_authentication_gateway:latest
 ```
 
----
-
-## ⚙️ Requirements
+## Requirements
 
 - Python 3.9+
 - Django 4.2+
 - PostgreSQL / MySQL 
 
 
-## 🛠️ Setup
+## Setup
 
 ```bash
 # 1. Clone repo
@@ -45,13 +41,14 @@ source venv/bin/activate  # or venv\Scripts\activate for Windows
 # 3. Install deps
 pip install -r requirements.txt
 
-# 4. Configure env
+# 4. Configure .env: rename the .env.example file & populate with the correct credentials
 cp .env.example .env
+
+# 4. Run the application
+python manage.py runserver 1819
 ```
 
----
-
-## 🔐 Environment Variables
+## Environment Variables
 
 ```env
 DEBUG=False
@@ -60,55 +57,79 @@ DATABASE_URL=postgres://user:password@localhost/db
 JWT_SECRET_KEY=your-jwt-secret
 ```
 
----
-
-## 🧭 Microservice Routing
+## Microservice Routing
 
 Define services in `config.yaml` or directly in `settings.py`:
 
-```python
-MICROSERVICES = {
-    'users': {
-        'url': 'http://users-service:5000',
-        'timeout': 15,
-    },
-    'orders': {
-        'url': 'http://orders-service:5001',
-        'timeout': 15,
-    }
-}
+```yaml
+microservices:
+  orders:
+    url: http://localhost:5000
+    timeout: 30
+    authorization: true
+    forward:
+      headers: true
+      body: true
+      params: true
+
+  users:
+    url: http://localhost:5001
+    timeout: 30
+    authorization: false
+    forward:
+      headers: true
+      body: false
+      params: true
+
+  inventory:
+    url: http://localhost:5002
+    timeout: 45
+    authorization: true
+    forward:
+      headers: true
+      body: true
+      params: true
 ```
 
----
-
-## 🔁 Authentication Flow
+## Authentication Flow
 
 1. `POST /api/auth/token/` — get a JWT token
 2. Add header: `Authorization: Bearer <token>`
 3. Gateway validates token
 4. Routes request to correct microservice
 
----
 
-## 📦 Request Forwarding Example
 
-```http
-Client → GET /users/profile/
-Gateway → Auth → Proxy → http://users-service/profile/
+## Response structure
+
+### Success
+```bash
+{
+  "success": true,
+  "message": "Action completed successfully",
+  "data": {...},
+  "meta": { "request_id": "...", "timestamp": "..." }
+}
 ```
 
----
 
-## 🛡️ Security
+### Error
+```bash
+{
+  "success": false,
+  "message": "Order not found",
+  "code": 404,
+  "error": {
+    "type": "NotFoundError",
+    "details": "Order with ID 9876 not found"
+  },
+  "meta": { "request_id": "...", "timestamp": "..." }
+}
+```
 
-- Use HTTPS in production
-- Short-lived access tokens
-- Rate limiting (via caching or middleware)
-- Header sanitization
-- IP + request logging
 
 
-## 📊 Monitoring Endpoints
+## Monitoring Endpoints
 
 | Endpoint | Description |
 |----------|-------------|
@@ -116,9 +137,8 @@ Gateway → Auth → Proxy → http://users-service/profile/
 | `/metrics/` | Performance stats |
 | `/services/status/` | Microservice availability |
 
----
 
-## 🧪 Dev & Testing
+## Dev & Testing
 
 ```bash
 # Install dev tools
@@ -128,24 +148,31 @@ pip install -r requirements-dev.txt
 python manage.py test
 ```
 
----
 
-## ➕ Add a New Microservice
+## Add a New Microservice
 
-1. Register it in `MICROSERVICES` config.yaml
+1. Register it in `microservices` config.yaml
 2. Set up any auth or routing rules if needed
 3. Deploy and test
 
 
+## Security
 
-## 🙋 Contact
+- Use HTTPS in production
+- Short-lived access tokens
+- Rate limiting (via caching or middleware)
+- Header sanitization
+- IP + request logging
+
+
+## Contact
 
 - Email: **isadechair019@gmail.com**
 - WhatsApp: [Chat Now](https://api.whatsapp.com/send/?phone=254759856000)
 
 ---
 
-## 🧠 Pro Tip
+## Pro Tip
 
 Start multiple Django apps at once:
 
