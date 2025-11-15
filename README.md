@@ -105,7 +105,7 @@ microservices:
 ### Success
 ```bash
 {
-  "success": true,
+  "success": True,
   "message": "Action completed successfully",
   "data": {...},
   "meta": { "request_id": "...", "timestamp": "..." }
@@ -116,10 +116,10 @@ microservices:
 ### Error
 ```bash
 {
-  "success": false,
+  "success": False,
   "message": "Order not found",
   "code": 404,
-  "error": {
+  "errors": {
     "type": "NotFoundError",
     "details": "Order with ID 9876 not found"
   },
